@@ -155,37 +155,127 @@ static void *ipc_server_thread(void *arg) {
     return NULL;
 }
 
-// Cursor monitor thread for hover expansion
+// Cursor monitor thread for hover expansion & automatic collapse
 static void *cursor_monitor_thread(void *arg) {
+    int screen_w = 1920;
+    GdkScreen *screen = gdk_screen_get_default();
+    if (screen) {
+        int w = gdk_screen_get_width(screen);
+        if (w > 640) screen_w = w;
+    }
+
+    int left_hover_ticks = 0;
+    int center_hover_ticks = 0;
+    int right_hover_ticks = 0;
+
+    int left_out_ticks = 0;
+    int center_out_ticks = 0;
+    int right_out_ticks = 0;
+
     while (1) {
-        // Query Hyprland cursor pos
         char *pos = run_shell_output("hyprctl cursorpos 2>/dev/null");
         if (pos && strlen(pos) > 2) {
             int cx = 0, cy = 0;
             if (sscanf(pos, "%d, %d", &cx, &cy) == 2) {
-                // If cursor is within top 40px (Waybar area)
-                if (cy >= 0 && cy <= 40) {
-                    if (cx >= 0 && cx <= 450) {
+                // Pill bounds: only trigger expansion when "very inside"
+                int in_left_pill = (cy >= 10 && cy <= 34 && cx >= 24 && cx <= 280);
+                int in_center_pill = (cy >= 10 && cy <= 34 && cx >= (screen_w / 2 - 75) && cx <= (screen_w / 2 + 75));
+                int in_right_pill = (cy >= 10 && cy <= 34 && cx >= (screen_w - 350) && cx <= (screen_w - 25));
+
+                // Panel bounds (when open)
+                int in_left_panel = (g_zone_left.is_visible && cy >= 36 && cy <= 525 && cx >= 10 && cx <= 460);
+                int in_center_panel = (g_zone_center.is_visible && cy >= 36 && cy <= 545 && cx >= (screen_w / 2 - 230) && cx <= (screen_w / 2 + 230));
+                int in_right_panel = (g_zone_right.is_visible && cy >= 36 && cy <= 565 && cx >= (screen_w - 480) && cx <= (screen_w - 10));
+
+                // --- EXPANSION: Trigger only when stable inside pill for 2 ticks (~100ms) ---
+                if (in_left_pill) {
+                    left_hover_ticks++;
+                    if (left_hover_ticks == 2 && !g_zone_left.is_visible) {
                         g_idle_add(+[](gpointer u) -> gboolean {
                             show_zone("left", -1);
                             return FALSE;
                         }, NULL);
-                    } else if (cx > 450 && cx < 1400) {
+                    }
+                } else {
+                    left_hover_ticks = 0;
+                }
+
+                if (in_center_pill) {
+                    center_hover_ticks++;
+                    if (center_hover_ticks == 2 && !g_zone_center.is_visible) {
                         g_idle_add(+[](gpointer u) -> gboolean {
                             show_zone("center", -1);
                             return FALSE;
                         }, NULL);
-                    } else if (cx >= 1400) {
+                    }
+                } else {
+                    center_hover_ticks = 0;
+                }
+
+                if (in_right_pill) {
+                    right_hover_ticks++;
+                    if (right_hover_ticks == 2 && !g_zone_right.is_visible) {
                         g_idle_add(+[](gpointer u) -> gboolean {
                             show_zone("right", -1);
                             return FALSE;
                         }, NULL);
                     }
+                } else {
+                    right_hover_ticks = 0;
+                }
+
+                // --- AUTOMATIC COLLAPSE: When cursor is out of both pill and panel ---
+                if (g_zone_left.is_visible) {
+                    int inside_left = (cy >= 6 && cy <= 38 && cx >= 12 && cx <= 320) || in_left_panel;
+                    if (!inside_left) {
+                        left_out_ticks++;
+                        if (left_out_ticks >= 3) {
+                            g_idle_add(+[](gpointer u) -> gboolean {
+                                hide_zone("left");
+                                return FALSE;
+                            }, NULL);
+                            left_out_ticks = 0;
+                        }
+                    } else {
+                        left_out_ticks = 0;
+                    }
+                }
+
+                if (g_zone_center.is_visible) {
+                    int inside_center = (cy >= 6 && cy <= 38 && cx >= (screen_w / 2 - 100) && cx <= (screen_w / 2 + 100)) || in_center_panel;
+                    if (!inside_center) {
+                        center_out_ticks++;
+                        if (center_out_ticks >= 3) {
+                            g_idle_add(+[](gpointer u) -> gboolean {
+                                hide_zone("center");
+                                return FALSE;
+                            }, NULL);
+                            center_out_ticks = 0;
+                        }
+                    } else {
+                        center_out_ticks = 0;
+                    }
+                }
+
+                if (g_zone_right.is_visible) {
+                    int inside_right = (cy >= 6 && cy <= 38 && cx >= (screen_w - 380) && cx <= (screen_w - 10)) || in_right_panel;
+                    if (!inside_right) {
+                        right_out_ticks++;
+                        if (right_out_ticks >= 3) {
+                            g_idle_add(+[](gpointer u) -> gboolean {
+                                hide_zone("right");
+                                return FALSE;
+                            }, NULL);
+                            right_out_ticks = 0;
+                        }
+                    } else {
+                        right_out_ticks = 0;
+                    }
                 }
             }
             free(pos);
         }
-        usleep(80000); // 80ms
+        usleep(50000); // 50ms polling interval
     }
     return NULL;
 }

@@ -33,7 +33,7 @@ void build_left_zone(void) {
     gtk_layer_set_layer(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_LAYER_TOP);
     gtk_layer_set_anchor(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_EDGE_TOP, TRUE);
     gtk_layer_set_anchor(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_EDGE_LEFT, TRUE);
-    gtk_layer_set_margin(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_EDGE_TOP, 42);
+    gtk_layer_set_margin(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_EDGE_TOP, 37);
     gtk_layer_set_margin(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_EDGE_LEFT, 12);
     gtk_layer_set_keyboard_mode(GTK_WINDOW(g_zone_left.window), GTK_LAYER_SHELL_KEYBOARD_MODE_NONE);
 

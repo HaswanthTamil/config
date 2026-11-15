@@ -2,10 +2,15 @@
    Three-Zone Interactive Waybar - Matte Translucent Glass Design System
    ========================================================================== */
 
+/* @font-face {
+    font-family: 'Symbols Nerd Font Mono';
+    src: url('/home/haswanthtamil/.config/waybar/assets/fonts/SymbolsNerdFontMono-Regular.ttf');
+} */
+
 * {
     border: none;
     border-radius: 0;
-    font-family: "JetBrains Mono", "Inter", "Adwaita Sans", "Adwaita Mono", -apple-system, sans-serif;
+    font-family: "Symbols Nerd Font Mono", "JetBrains Mono", "Inter", "Adwaita Sans", "Adwaita Mono", -apple-system, sans-serif;
     font-size: 12px;
     font-weight: 500;
     min-height: 0;
