@@ -1,0 +1,7 @@
+{
+  "custom/calendar-indicator": {
+    "format": "󰃭",
+    "tooltip": "Calendar & Scheduled Events (Click to open)",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle center"
+  }
+}

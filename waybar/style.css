@@ -1,0 +1,224 @@
+/* ==========================================================================
+   Three-Zone Interactive Waybar - Matte Translucent Glass Design System
+   ========================================================================== */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrains Mono", "Inter", "Adwaita Sans", "Adwaita Mono", -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Single continuous matte translucent glass bar */
+window#waybar {
+    background-color: rgba(22, 24, 29, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: #e6e8eb;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Logical interaction zones: subtle hover feedback, no visually disjoint cards */
+#zone-left,
+#zone-center,
+#zone-right {
+    padding: 2px 8px;
+    border-radius: 10px;
+    transition: background-color 0.25s ease;
+}
+
+#zone-left:hover,
+#zone-center:hover,
+#zone-right:hover {
+    background-color: rgba(255, 255, 255, 0.035);
+}
+
+/* ==========================================================================
+   Zone 01: Left - Workspace & Media
+   ========================================================================== */
+
+#workspaces {
+    margin: 0 6px 0 2px;
+}
+
+#workspaces button {
+    padding: 2px 7px;
+    margin: 0 2px;
+    border-radius: 6px;
+    color: #9399a2;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    color: #e6e8eb;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+#workspaces button.active {
+    color: #ffffff;
+    background-color: rgba(122, 140, 158, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#workspaces button.urgent {
+    color: #e06c75;
+    background-color: rgba(224, 108, 117, 0.15);
+}
+
+#custom-media {
+    padding: 2px 8px;
+    margin: 0 4px;
+    color: #c5c9cf;
+    border-radius: 6px;
+}
+
+#custom-media.spotify {
+    color: #1db954;
+}
+
+#custom-media.youtube {
+    color: #ff5555;
+}
+
+#custom-media.playing {
+    font-weight: 500;
+}
+
+#custom-media.paused {
+    color: #9399a2;
+}
+
+#custom-media.stopped {
+    padding: 0;
+    margin: 0;
+}
+
+#custom-visualizer {
+    padding: 2px 6px;
+    margin: 0 4px;
+    color: #7a8c9e;
+    font-family: "JetBrains Mono", "Adwaita Mono", monospace;
+    font-size: 11px;
+    letter-spacing: -1px;
+}
+
+#custom-visualizer.disabled {
+    padding: 0;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Zone 02: Middle - Time & Notifications
+   ========================================================================== */
+
+#clock {
+    padding: 2px 8px;
+    color: #e6e8eb;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+#custom-notification-dot {
+    margin: 0 4px 0 2px;
+    padding: 0 2px;
+    font-size: 8px;
+    color: #7a8c9e;
+    transition: opacity 0.3s ease;
+}
+
+#custom-notification-dot.unread {
+    color: #7a8c9e;
+    text-shadow: 0 0 4px rgba(122, 140, 158, 0.5);
+}
+
+#custom-notification-dot.all-read {
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==========================================================================
+   Zone 03: Right - System & Controls
+   ========================================================================== */
+
+#custom-cpu-temp,
+#custom-memory,
+#custom-network,
+#custom-bluetooth,
+#custom-audio-output,
+#custom-audio-input {
+    padding: 2px 7px;
+    margin: 0 1px;
+    color: #c5c9cf;
+    border-radius: 6px;
+}
+
+#custom-cpu-temp:hover,
+#custom-memory:hover,
+#custom-network:hover,
+#custom-bluetooth:hover,
+#custom-audio-output:hover,
+#custom-audio-input:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+#custom-cpu-temp.warning {
+    color: #e5c07b;
+}
+
+#custom-cpu-temp.critical {
+    color: #e06c75;
+}
+
+#custom-memory.warning {
+    color: #e5c07b;
+}
+
+#custom-memory.critical {
+    color: #e06c75;
+}
+
+#custom-network.connected {
+    color: #c5c9cf;
+}
+
+#custom-network.disconnected {
+    color: #9399a2;
+}
+
+#custom-bluetooth.connected {
+    color: #7a8c9e;
+}
+
+#custom-bluetooth.disconnected {
+    color: #9399a2;
+}
+
+#custom-bluetooth.disabled {
+    color: #5c6370;
+}
+
+#custom-audio-output.muted,
+#custom-audio-input.muted {
+    color: #e06c75;
+}
+
+#custom-power {
+    padding: 2px 9px 2px 7px;
+    margin-left: 3px;
+    color: #9399a2;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+#custom-power:hover {
+    color: #e06c75;
+    background-color: rgba(224, 108, 117, 0.12);
+}

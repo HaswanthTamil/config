@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "style": "bars",
+  "bars": 8,
+  "sensitivity": 1.0
+}

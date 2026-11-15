@@ -1,0 +1,7 @@
+{
+  "custom/reminders-indicator": {
+    "format": "󰂚",
+    "tooltip": "Reminders (Click to open)",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle center"
+  }
+}

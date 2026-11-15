@@ -1,0 +1,9 @@
+{
+  "custom/bluetooth": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "$HOME/.config/waybar/scripts/bluetooth/bt_status.sh",
+    "interval": 4,
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 3"
+  }
+}

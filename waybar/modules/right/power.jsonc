@@ -1,0 +1,7 @@
+{
+  "custom/power": {
+    "format": "⏻",
+    "tooltip": "Power & Session Controls (Click to open)",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 6"
+  }
+}

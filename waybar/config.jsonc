@@ -1,0 +1,68 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 32,
+  "margin-top": 6,
+  "margin-left": 12,
+  "margin-right": 12,
+  "spacing": 0,
+
+  "include": [
+    "~/.config/waybar/modules/left/workspaces.jsonc",
+    "~/.config/waybar/modules/left/media.jsonc",
+    "~/.config/waybar/modules/left/visualizer.jsonc",
+    "~/.config/waybar/modules/center/clock.jsonc",
+    "~/.config/waybar/modules/center/notifications.jsonc",
+    "~/.config/waybar/modules/center/calendar.jsonc",
+    "~/.config/waybar/modules/center/reminders.jsonc",
+    "~/.config/waybar/modules/right/cpu.jsonc",
+    "~/.config/waybar/modules/right/memory.jsonc",
+    "~/.config/waybar/modules/right/network.jsonc",
+    "~/.config/waybar/modules/right/bluetooth.jsonc",
+    "~/.config/waybar/modules/right/output.jsonc",
+    "~/.config/waybar/modules/right/input.jsonc",
+    "~/.config/waybar/modules/right/power.jsonc"
+  ],
+
+  "modules-left": [
+    "group/zone-left"
+  ],
+
+  "modules-center": [
+    "group/zone-center"
+  ],
+
+  "modules-right": [
+    "group/zone-right"
+  ],
+
+  "group/zone-left": {
+    "orientation": "horizontal",
+    "modules": [
+      "hyprland/workspaces",
+      "custom/media",
+      "custom/visualizer"
+    ]
+  },
+
+  "group/zone-center": {
+    "orientation": "horizontal",
+    "modules": [
+      "clock",
+      "custom/notification-dot"
+    ]
+  },
+
+  "group/zone-right": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/cpu-temp",
+      "custom/memory",
+      "custom/network",
+      "custom/bluetooth",
+      "custom/audio-output",
+      "custom/audio-input",
+      "custom/power"
+    ]
+  }
+}

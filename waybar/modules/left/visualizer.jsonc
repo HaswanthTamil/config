@@ -1,0 +1,12 @@
+{
+  "custom/visualizer": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "$HOME/.config/waybar/scripts/audio/visualizer_status.sh",
+    "interval": 1,
+    "signal": 8,
+    "on-click": "$HOME/.config/waybar/scripts/audio/visualizer_toggle.sh",
+    "on-click-right": "$HOME/.config/waybar/panel/zone-panel toggle left",
+    "escape": false
+  }
+}
