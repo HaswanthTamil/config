@@ -4,10 +4,12 @@
     "return-type": "json",
     "exec": "$HOME/.config/waybar/scripts/media/media_status.py",
     "interval": 2,
-    "on-click": "$HOME/.config/waybar/scripts/media/media_control.sh play-pause",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle left",
     "on-click-middle": "$HOME/.config/waybar/scripts/media/media_control.sh next",
-    "on-click-right": "$HOME/.config/waybar/panel/zone-panel toggle left",
+    "on-click-right": "$HOME/.config/waybar/scripts/media/media_control.sh play-pause",
+    "on-scroll-up": "$HOME/.config/waybar/scripts/media/media_control.sh next",
+    "on-scroll-down": "$HOME/.config/waybar/scripts/media/media_control.sh prev",
     "escape": true,
-    "max-length": 28
+    "max-length": 42
   }
 }

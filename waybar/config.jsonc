@@ -1,67 +1,61 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 32,
-  "margin-top": 6,
-  "margin-left": 12,
-  "margin-right": 12,
+  "height": 34,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
   "spacing": 0,
 
   "include": [
+    "~/.config/waybar/modules/left/active_workspace.jsonc",
     "~/.config/waybar/modules/left/workspaces.jsonc",
+    "~/.config/waybar/modules/left/resources.jsonc",
+    "~/.config/waybar/modules/left/drawer.jsonc",
     "~/.config/waybar/modules/left/media.jsonc",
     "~/.config/waybar/modules/left/visualizer.jsonc",
     "~/.config/waybar/modules/center/clock.jsonc",
+    "~/.config/waybar/modules/center/weather.jsonc",
+    "~/.config/waybar/modules/center/drawer.jsonc",
     "~/.config/waybar/modules/center/notifications.jsonc",
-    "~/.config/waybar/modules/center/calendar.jsonc",
-    "~/.config/waybar/modules/center/reminders.jsonc",
+    "~/.config/waybar/modules/right/timer.jsonc",
+    "~/.config/waybar/modules/right/nightmode.jsonc",
     "~/.config/waybar/modules/right/cpu.jsonc",
     "~/.config/waybar/modules/right/memory.jsonc",
     "~/.config/waybar/modules/right/network.jsonc",
     "~/.config/waybar/modules/right/bluetooth.jsonc",
     "~/.config/waybar/modules/right/output.jsonc",
     "~/.config/waybar/modules/right/input.jsonc",
-    "~/.config/waybar/modules/right/power.jsonc"
+    "~/.config/waybar/modules/right/power.jsonc",
+    "~/.config/waybar/modules/right/battery.jsonc",
+    "~/.config/waybar/modules/right/drawer.jsonc"
   ],
 
   "modules-left": [
-    "group/zone-left"
+    "custom/active-workspace",
+    "custom/media",
+    "custom/visualizer"
   ],
 
   "modules-center": [
-    "group/zone-center"
+    "clock",
+    "custom/notification-dot"
   ],
 
   "modules-right": [
-    "group/zone-right"
+    "group/controls-group"
   ],
 
-  "group/zone-left": {
-    "orientation": "horizontal",
-    "modules": [
-      "hyprland/workspaces",
-      "custom/media",
-      "custom/visualizer"
-    ]
-  },
-
-  "group/zone-center": {
-    "orientation": "horizontal",
-    "modules": [
-      "clock",
-      "custom/notification-dot"
-    ]
-  },
-
-  "group/zone-right": {
+  "group/controls-group": {
     "orientation": "horizontal",
     "modules": [
       "custom/cpu-temp",
       "custom/memory",
-      "custom/network",
-      "custom/bluetooth",
       "custom/audio-output",
       "custom/audio-input",
+      "custom/battery",
+      "custom/bluetooth",
+      "custom/network",
       "custom/power"
     ]
   }

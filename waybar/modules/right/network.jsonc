@@ -4,6 +4,6 @@
     "return-type": "json",
     "exec": "$HOME/.config/waybar/scripts/network/wifi_status.sh",
     "interval": 4,
-    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 2"
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 3"
   }
 }

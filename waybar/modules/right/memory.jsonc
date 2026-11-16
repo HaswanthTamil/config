@@ -4,6 +4,6 @@
     "return-type": "json",
     "exec": "$HOME/.config/waybar/scripts/system/ram_usage.sh",
     "interval": 3,
-    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 1"
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 0"
   }
 }

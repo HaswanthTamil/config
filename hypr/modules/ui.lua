@@ -101,6 +101,15 @@ hl.window_rule({
     float = true,
 })
 
+-- The zone-panel drawer animates its own height from the bar. Hyprland's
+-- layer fade would hide the first ~100 ms of that growth, making it look like
+-- a popup instead of the bar extending downward.
+hl.layer_rule({
+    name  = "no-anim-zone-panel",
+    match = { namespace = "^zone-panel$" },
+    no_anim = true,
+})
+
 
 -- Default curves and animations, see https://wiki.hypr.land/configuring/core/animations/
 hl.curve("easeOutQuint",   { type = "bezier", points = { {0.23, 1},    {0.32, 1}    } })

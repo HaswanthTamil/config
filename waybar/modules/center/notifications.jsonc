@@ -4,7 +4,7 @@
     "return-type": "json",
     "exec": "$HOME/.config/waybar/scripts/center/notif_status.sh",
     "interval": 2,
-    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle center",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show center 2",
     "escape": true
   }
 }

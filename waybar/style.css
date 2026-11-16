@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Three-Zone Interactive Waybar - Matte Translucent Glass Design System
+   Waybar — Exact replica of reference Image 1
+   One continuous dark pill. Three logical zones. Minimal, monochrome icons.
    ========================================================================== */
 
 /* @font-face {
@@ -10,220 +11,297 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "Symbols Nerd Font Mono", "JetBrains Mono", "Inter", "Adwaita Sans", "Adwaita Mono", -apple-system, sans-serif;
+    font-family: "Symbols Nerd Font Mono", "JetBrains Mono", "Adwaita Mono", monospace;
     font-size: 12px;
     font-weight: 500;
     min-height: 0;
     margin: 0;
     padding: 0;
-    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: none;
+    text-shadow: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Single continuous matte translucent glass bar */
+/* ── Outer bar: flush to the display's top and side edges ─────────────────── */
 window#waybar {
-    background-color: rgba(22, 24, 29, 0.84);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    color: #e6e8eb;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    background-color: rgba(28, 22, 16, 0.92);
+    border: none;
+    border-radius: 0;
+    color: #c8bfb6;
+    padding: 0 4px;
 }
 
-/* Logical interaction zones: subtle hover feedback, no visually disjoint cards */
-#zone-left,
-#zone-center,
-#zone-right {
-    padding: 2px 8px;
-    border-radius: 10px;
-    transition: background-color 0.25s ease;
+/* Remove GTK default button chrome everywhere */
+button {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
-#zone-left:hover,
-#zone-center:hover,
-#zone-right:hover {
-    background-color: rgba(255, 255, 255, 0.035);
+button:focus {
+    box-shadow: none;
+    outline: none;
 }
 
-/* ==========================================================================
-   Zone 01: Left - Workspace & Media
-   ========================================================================== */
+/* ── Left zone ─────────────────────────────────────────────────────────────── */
 
+/* Workspace dots: amber active, dim inactive — exact Image 1 style */
 #workspaces {
-    margin: 0 6px 0 2px;
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    padding: 1px 5px;
+    margin: 4px 3px 4px 6px;
 }
 
 #workspaces button {
-    padding: 2px 7px;
-    margin: 0 2px;
-    border-radius: 6px;
-    color: #9399a2;
-    background: transparent;
-    transition: all 0.2s ease;
-}
-
-#workspaces button:hover {
-    color: #e6e8eb;
-    background-color: rgba(255, 255, 255, 0.06);
+    padding: 0px 8px;
+    margin: 1px;
+    border-radius: 9999px;
+    color: #6a6560;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 18px;
+    min-height: 18px;
 }
 
 #workspaces button.active {
-    color: #ffffff;
-    background-color: rgba(122, 140, 158, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    background-color: rgba(190, 128, 55, 0.90);
+    padding: 0px 9px;
+}
+
+#workspaces button.occupied {
+    color: #9a948e;
 }
 
 #workspaces button.urgent {
-    color: #e06c75;
-    background-color: rgba(224, 108, 117, 0.15);
+    color: #fff;
+    background-color: rgba(220, 90, 90, 0.80);
 }
 
-#custom-media {
-    padding: 2px 8px;
-    margin: 0 4px;
-    color: #c5c9cf;
-    border-radius: 6px;
+#workspaces button:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.09);
 }
 
-#custom-media.spotify {
-    color: #1db954;
-}
-
-#custom-media.youtube {
-    color: #ff5555;
-}
-
-#custom-media.playing {
-    font-weight: 500;
-}
-
-#custom-media.paused {
-    color: #9399a2;
-}
-
-#custom-media.stopped {
-    padding: 0;
-    margin: 0;
+/* Active workspace only */
+#custom-active-workspace {
+    background: rgba(190, 128, 55, 0.90);
+    border: 1px solid rgba(190, 128, 55, 0.40);
+    border-radius: 9999px;
+    padding: 2px 11px;
+    margin: 4px 3px 4px 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
 }
 
 #custom-visualizer {
-    padding: 2px 6px;
-    margin: 0 4px;
-    color: #7a8c9e;
-    font-family: "JetBrains Mono", "Adwaita Mono", monospace;
-    font-size: 11px;
-    letter-spacing: -1px;
-}
-
-#custom-visualizer.disabled {
-    padding: 0;
-    margin: 0;
-}
-
-/* ==========================================================================
-   Zone 02: Middle - Time & Notifications
-   ========================================================================== */
-
-#clock {
     padding: 2px 8px;
-    color: #e6e8eb;
-    font-weight: 500;
+    margin: 4px 3px;
+    font-size: 12px;
+    color: #a09890;
+    border-radius: 9999px;
+}
+
+#custom-visualizer:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* Resource capsule: 11% | 62°C | 4.3GB */
+#custom-resources {
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    padding: 2px 11px;
+    margin: 4px 3px;
+    font-size: 11px;
+    color: #c0bab3;
     letter-spacing: 0.2px;
 }
 
-#custom-notification-dot {
-    margin: 0 4px 0 2px;
-    padding: 0 2px;
-    font-size: 8px;
-    color: #7a8c9e;
-    transition: opacity 0.3s ease;
+/* ── Center zone ───────────────────────────────────────────────────────────── */
+
+/* Media icon: standalone, no background capsule — matches Image 1 */
+#custom-media {
+    padding: 2px 7px;
+    margin: 0 1px;
+    font-size: 14px;
+    color: #a09890;
+    border-radius: 9999px;
 }
 
+#custom-media:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* Clock: main center element, slightly brighter */
+#clock {
+    padding: 2px 10px;
+    margin: 0 1px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #e8e0d6;
+    letter-spacing: 0.15px;
+}
+
+/* Weather: same style as media */
+#custom-weather {
+    padding: 2px 7px;
+    margin: 0 1px;
+    font-size: 11px;
+    color: #a09890;
+    border-radius: 9999px;
+}
+
+#custom-weather:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Right zone ────────────────────────────────────────────────────────────── */
+
+/* Controls group: single inner pill containing all icons */
+#controls-group {
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    padding: 1px 4px;
+    margin: 4px 3px;
+}
+
+/* Each icon inside controls-group: uniform size, monochrome */
+#custom-timer,
+#custom-notification-dot,
+#custom-nightmode,
+#custom-cpu-temp,
+#custom-memory,
+#custom-audio-input,
+#custom-audio-output,
+#custom-network,
+#custom-bluetooth,
+#custom-power {
+    padding: 1px 5px;
+    font-size: 13px;
+    color: #8e8880;
+    border-radius: 9999px;
+    min-width: 20px;
+}
+
+#custom-timer:hover,
+#custom-notification-dot:hover,
+#custom-nightmode:hover,
+#custom-cpu-temp:hover,
+#custom-memory:hover,
+#custom-audio-input:hover,
+#custom-audio-output:hover,
+#custom-network:hover,
+#custom-bluetooth:hover,
+#custom-power:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+/* State indicators */
 #custom-notification-dot.unread {
-    color: #7a8c9e;
-    text-shadow: 0 0 4px rgba(122, 140, 158, 0.5);
+    color: #d4a85a;
+    padding: 1px 4px;
 }
 
 #custom-notification-dot.all-read {
-    opacity: 0;
-    margin: 0;
     padding: 0;
+    min-width: 0;
 }
 
-/* ==========================================================================
-   Zone 03: Right - System & Controls
-   ========================================================================== */
-
-#custom-cpu-temp,
-#custom-memory,
-#custom-network,
-#custom-bluetooth,
-#custom-audio-output,
-#custom-audio-input {
-    padding: 2px 7px;
-    margin: 0 1px;
-    color: #c5c9cf;
-    border-radius: 6px;
+#custom-audio-output.muted {
+    color: #9a5050;
 }
 
-#custom-cpu-temp:hover,
-#custom-memory:hover,
-#custom-network:hover,
-#custom-bluetooth:hover,
-#custom-audio-output:hover,
-#custom-audio-input:hover {
-    color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-#custom-cpu-temp.warning {
-    color: #e5c07b;
-}
-
-#custom-cpu-temp.critical {
-    color: #e06c75;
-}
-
-#custom-memory.warning {
-    color: #e5c07b;
-}
-
-#custom-memory.critical {
-    color: #e06c75;
-}
-
-#custom-network.connected {
-    color: #c5c9cf;
+#custom-audio-input.muted {
+    color: #9a5050;
 }
 
 #custom-network.disconnected {
-    color: #9399a2;
+    color: #5a5550;
+}
+
+#custom-bluetooth.off,
+#custom-bluetooth.disabled {
+    color: #5a5550;
 }
 
 #custom-bluetooth.connected {
-    color: #7a8c9e;
+    color: #6a9ec0;
 }
 
-#custom-bluetooth.disconnected {
-    color: #9399a2;
+#custom-nightmode.active {
+    color: #d4a85a;
 }
 
-#custom-bluetooth.disabled {
-    color: #5c6370;
+/* Battery percentage inside the controls capsule */
+#custom-battery {
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    padding: 1px 6px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: #d0c8bf;
 }
 
-#custom-audio-output.muted,
-#custom-audio-input.muted {
-    color: #e06c75;
+#custom-battery.Charging {
+    color: #7ab87a;
 }
 
-#custom-power {
-    padding: 2px 9px 2px 7px;
-    margin-left: 3px;
-    color: #9399a2;
-    border-radius: 6px;
-    font-size: 13px;
+#custom-battery.low {
+    color: #c05050;
 }
 
-#custom-power:hover {
-    color: #e06c75;
-    background-color: rgba(224, 108, 117, 0.12);
+/* ── Drawer handles ────────────────────────────────────────────────────────
+   Tiny chevrons at the end of each zone. They replace the old hover-open
+   behaviour and look like little pull handles attached to each cluster. */
+#custom-drawer-left,
+#custom-drawer-center,
+#custom-drawer-right {
+    padding: 0 5px;
+    margin: 4px 2px;
+    font-size: 10px;
+    color: rgba(200, 191, 182, 0.42);
+    border-radius: 9999px;
+    min-width: 14px;
+    min-height: 18px;
+}
+
+#custom-drawer-left:hover,
+#custom-drawer-center:hover,
+#custom-drawer-right:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+#custom-drawer-left {
+    margin-left: 0;
+}
+
+#custom-drawer-right {
+    margin-right: 4px;
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────────────────── */
+tooltip {
+    background: rgba(28, 22, 16, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #c8bfb6;
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+tooltip label {
+    color: #c8bfb6;
 }

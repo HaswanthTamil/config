@@ -5,9 +5,9 @@
     "exec": "$HOME/.config/waybar/scripts/audio/input_status.sh",
     "interval": 2,
     "signal": 10,
-    "on-click": "$HOME/.config/waybar/scripts/audio/audio_control.sh input mute",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel show right 0",
     "on-scroll-up": "$HOME/.config/waybar/scripts/audio/audio_control.sh input up",
     "on-scroll-down": "$HOME/.config/waybar/scripts/audio/audio_control.sh input down",
-    "on-click-right": "$HOME/.config/waybar/panel/zone-panel show right 5"
+    "on-click-right": "$HOME/.config/waybar/scripts/audio/audio_control.sh input mute"
   }
 }
