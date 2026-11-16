@@ -28,7 +28,6 @@ ShellRoot {
     function closeLauncher() {
         launcherVisible = false;
         query = "";
-        Qt.quit();
     }
 
     function toggleLauncher() {

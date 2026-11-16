@@ -267,10 +267,12 @@ void build_right_zone(void) {
 
     GtkWidget *wifi_scan = gtk_button_new_with_label("Scan");
     gtk_style_context_add_class(gtk_widget_get_style_context(wifi_scan), "action-btn");
+    gtk_widget_set_valign(wifi_scan, GTK_ALIGN_CENTER);
     g_signal_connect(wifi_scan, "clicked", G_CALLBACK(on_wifi_scan_clicked), NULL);
     gtk_box_pack_end(GTK_BOX(net_hdr), wifi_scan, FALSE, FALSE, 0);
 
     s_net_switch = gtk_switch_new();
+    gtk_widget_set_valign(s_net_switch, GTK_ALIGN_CENTER);
     gtk_switch_set_active(GTK_SWITCH(s_net_switch), TRUE);
     g_signal_connect(s_net_switch, "state-set", G_CALLBACK(on_wifi_toggle_clicked), NULL);
     gtk_box_pack_end(GTK_BOX(net_hdr), s_net_switch, FALSE, FALSE, 0);
@@ -605,61 +607,102 @@ void refresh_right_zone(void) {
         for (GList *l = ch; l != NULL; l = l->next) gtk_widget_destroy(GTK_WIDGET(l->data));
         g_list_free(ch);
 
+        /* Use python for robust nmcli -g parsing/unescaping and dedupe by SSID */
         char *nets = run_shell_output(
-            "nmcli -e no -g IN-USE,SSID,SIGNAL,SECURITY device wifi list --rescan no 2>/dev/null | head -n 15");
+            "python3 -c \""
+            "import subprocess,sys\n"
+            "try:\n"
+            "  out=subprocess.check_output(['nmcli','-e','yes','-g','IN-USE,SSID,SIGNAL,SECURITY','device','wifi','list','--rescan','no'],stderr=subprocess.DEVNULL,text=True)\n"
+            "except Exception:\n"
+            "  sys.exit(0)\n"
+            "seen=set()\n"
+            "for raw in out.splitlines():\n"
+            "  fields=[]; cur=[]; i=0\n"
+            "  while i<len(raw):\n"
+            "    if raw[i]=='\\\\' and i+1<len(raw): cur.append(raw[i+1]); i+=2; continue\n"
+            "    if raw[i]==':' and len(fields)<3: fields.append(''.join(cur)); cur=[]; i+=1; continue\n"
+            "    cur.append(raw[i]); i+=1\n"
+            "  fields.append(''.join(cur))\n"
+            "  if len(fields)<4: continue\n"
+            "  inuse,ssid,sig,sec=fields[0],fields[1],fields[2],fields[3]\n"
+            "  if not ssid or ssid in seen: continue\n"
+            "  seen.add(ssid)\n"
+            "  print('\\t'.join([inuse,ssid,sig,sec]))\n"
+            "\" 2>/dev/null | head -n 15");
         int shown = 0;
         if (nets) {
             char *save = NULL;
             char *line = strtok_r(nets, "\n", &save);
             while (line) {
-                char inuse[4] = "", ssid[128] = "", sig[16] = "", sec[48] = "";
-                /* -g with -e no prints ':'-separated fields without escaping issues in most cases */
-                char *fields[4] = {0};
-                int nf = 0;
+                char inuse[4] = "", ssid[160] = "", sig[16] = "", sec[48] = "";
+                /* tab-separated: IN-USE \t SSID \t SIGNAL \t SECURITY */
                 char *p = line;
-                while (nf < 4) {
-                    fields[nf++] = p;
-                    char *c = strchr(p, ':');
-                    if (!c) break;
-                    if (nf == 4) break;
-                    *c = '\0';
-                    p = c + 1;
+                char *t1 = strchr(p, '\t');
+                if (t1) {
+                    size_t n = (size_t)(t1 - p); if (n >= sizeof(inuse)) n = sizeof(inuse)-1;
+                    memcpy(inuse, p, n); inuse[n] = '\0'; p = t1 + 1;
+                    char *t2 = strchr(p, '\t');
+                    if (t2) {
+                        n = (size_t)(t2 - p); if (n >= sizeof(ssid)) n = sizeof(ssid)-1;
+                        memcpy(ssid, p, n); ssid[n] = '\0'; p = t2 + 1;
+                        char *t3 = strchr(p, '\t');
+                        if (t3) {
+                            n = (size_t)(t3 - p); if (n >= sizeof(sig)) n = sizeof(sig)-1;
+                            memcpy(sig, p, n); sig[n] = '\0'; p = t3 + 1;
+                            strncpy(sec, p, sizeof(sec)-1); sec[sizeof(sec)-1] = '\0';
+                        } else {
+                            strncpy(sig, p, sizeof(sig)-1); sig[sizeof(sig)-1] = '\0';
+                        }
+                    } else {
+                        strncpy(ssid, p, sizeof(ssid)-1); ssid[sizeof(ssid)-1] = '\0';
+                    }
+                } else {
+                    strncpy(ssid, p, sizeof(ssid)-1); ssid[sizeof(ssid)-1] = '\0';
                 }
-                if (nf >= 1 && fields[0]) strncpy(inuse, fields[0], sizeof(inuse)-1);
-                if (nf >= 2 && fields[1]) strncpy(ssid, fields[1], sizeof(ssid)-1);
-                if (nf >= 3 && fields[2]) strncpy(sig, fields[2], sizeof(sig)-1);
-                if (nf >= 4 && fields[3]) strncpy(sec, fields[3], sizeof(sec)-1);
 
                 if (ssid[0] == '\0') { line = strtok_r(NULL, "\n", &save); continue; }
 
                 GtkWidget *row = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 8);
                 gtk_style_context_add_class(gtk_widget_get_style_context(row), "item-card");
+                gtk_widget_set_valign(row, GTK_ALIGN_CENTER);
+
+                GtkWidget *text_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+                gtk_widget_set_valign(text_box, GTK_ALIGN_CENTER);
+                gtk_box_pack_start(GTK_BOX(row), text_box, TRUE, TRUE, 0);
 
                 GtkWidget *lbl = gtk_label_new(ssid);
                 gtk_style_context_add_class(gtk_widget_get_style_context(lbl), "item-title");
                 gtk_widget_set_halign(lbl, GTK_ALIGN_START);
+                gtk_label_set_xalign(GTK_LABEL(lbl), 0.0);
                 gtk_label_set_ellipsize(GTK_LABEL(lbl), PANGO_ELLIPSIZE_END);
-                gtk_box_pack_start(GTK_BOX(row), lbl, TRUE, TRUE, 0);
+                gtk_box_pack_start(GTK_BOX(text_box), lbl, FALSE, FALSE, 0);
 
-                if (sig[0] != '\0') {
-                    char meta[64];
-                    if (sec[0] != '\0')
-                        snprintf(meta, sizeof(meta), "%s%%  󰌾", sig);
-                    else
+                if (sig[0] != '\0' || sec[0] != '\0') {
+                    char meta[96];
+                    if (sig[0] != '\0' && sec[0] != '\0')
+                        snprintf(meta, sizeof(meta), "%s%%  •  %s", sig, sec);
+                    else if (sig[0] != '\0')
                         snprintf(meta, sizeof(meta), "%s%%", sig);
+                    else
+                        snprintf(meta, sizeof(meta), "%s", sec);
                     GtkWidget *ml = gtk_label_new(meta);
                     gtk_style_context_add_class(gtk_widget_get_style_context(ml), "item-subtitle");
-                    gtk_box_pack_start(GTK_BOX(row), ml, FALSE, FALSE, 4);
+                    gtk_widget_set_halign(ml, GTK_ALIGN_START);
+                    gtk_label_set_xalign(GTK_LABEL(ml), 0.0);
+                    gtk_label_set_ellipsize(GTK_LABEL(ml), PANGO_ELLIPSIZE_END);
+                    gtk_box_pack_start(GTK_BOX(text_box), ml, FALSE, FALSE, 0);
                 }
 
                 if (inuse[0] == '*') {
                     GtkWidget *st = gtk_label_new("󰄬 Connected");
-                    gtk_style_context_add_class(gtk_widget_get_style_context(st), "item-title");
+                    gtk_style_context_add_class(gtk_widget_get_style_context(st), "item-subtitle");
+                    gtk_widget_set_valign(st, GTK_ALIGN_CENTER);
                     gtk_box_pack_end(GTK_BOX(row), st, FALSE, FALSE, 0);
                 } else {
                     GtkWidget *btn = gtk_button_new_with_label("Connect");
                     gtk_style_context_add_class(gtk_widget_get_style_context(btn), "action-btn");
-                    g_object_set_data_full(G_OBJECT(btn), "wifi-ssid", strdup(ssid), free);
+                    gtk_widget_set_valign(btn, GTK_ALIGN_CENTER);
+                    g_object_set_data_full(G_OBJECT(btn), "wifi-ssid", g_strdup(ssid), g_free);
                     g_signal_connect(btn, "clicked", G_CALLBACK(on_wifi_network_clicked), NULL);
                     gtk_box_pack_end(GTK_BOX(row), btn, FALSE, FALSE, 0);
                 }
@@ -673,6 +716,7 @@ void refresh_right_zone(void) {
         if (shown == 0) {
             GtkWidget *empty = gtk_label_new("No networks found. Press Scan.");
             gtk_style_context_add_class(gtk_widget_get_style_context(empty), "item-subtitle");
+            gtk_widget_set_halign(empty, GTK_ALIGN_START);
             gtk_box_pack_start(GTK_BOX(s_net_list_box), empty, FALSE, FALSE, 8);
         }
         gtk_widget_show_all(s_net_list_box);
@@ -783,24 +827,32 @@ static void on_bt_disconnect_clicked(GtkButton *btn, gpointer user_data) {
 }
 
 static void on_wifi_scan_clicked(GtkButton *btn, gpointer user_data) {
+    (void)btn; (void)user_data;
     run_shell_command("nmcli device wifi rescan >/dev/null 2>&1 &");
-    g_timeout_add(2500, refresh_right_later, NULL);
+    g_timeout_add(1500, refresh_right_later, NULL);
+    g_timeout_add(3500, refresh_right_later, NULL);
 }
 
 static void on_wifi_network_clicked(GtkButton *btn, gpointer user_data) {
     const char *ssid = (const char *)g_object_get_data(G_OBJECT(btn), "wifi-ssid");
     if (!ssid) return;
-    char cmd[512];
+    char *q = g_shell_quote(ssid);
+    char cmd[1024];
     snprintf(cmd, sizeof(cmd),
-             "nmcli device wifi connect \"%s\" >/dev/null 2>&1 || "
-             "nmcli connection up \"%s\" >/dev/null 2>&1 &", ssid, ssid);
+             "(nmcli connection up id %s >/dev/null 2>&1 || "
+             "nmcli device wifi connect %s >/dev/null 2>&1) &", q, q);
+    g_free(q);
     run_shell_command(cmd);
-    g_timeout_add(3000, refresh_right_later, NULL);
+    g_timeout_add(2000, refresh_right_later, NULL);
+    g_timeout_add(5000, refresh_right_later, NULL);
 }
 
 static void on_wifi_disconnect_clicked(GtkButton *btn, gpointer user_data) {
-    run_shell_command("nmcli -t -f DEVICE,TYPE connection show --active 2>/dev/null | awk -F: '$2==\"wifi\"{print $1}' | xargs -r -n1 nmcli device disconnect >/dev/null 2>&1 &");
-    g_timeout_add(1500, refresh_right_later, NULL);
+    (void)btn; (void)user_data;
+    run_shell_command("nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | awk -F: '$2==\"802-11-wireless\" || $2==\"wifi\" {print $1}' | while IFS= read -r c; do nmcli connection down id \"$c\" >/dev/null 2>&1; done; "
+                      "nmcli -t -f DEVICE,TYPE device status 2>/dev/null | awk -F: '$2==\"wifi\"{print $1}' | xargs -r -n1 nmcli device disconnect >/dev/null 2>&1 &");
+    g_timeout_add(1200, refresh_right_later, NULL);
+    g_timeout_add(3000, refresh_right_later, NULL);
 }
 
 static void on_vpn_connect_clicked(GtkButton *btn, gpointer user_data) {

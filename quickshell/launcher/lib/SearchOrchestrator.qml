@@ -17,6 +17,13 @@ Item {
         onTriggered: root.runSearch(root.currentQuery, root.generation)
     }
 
+    function log(msg) {
+        var p = Qt.createQmlObject('import Quickshell.Io; Process {}', root, "logp");
+        p.command = ["bash", "-lc", "printf '%s\\n' " + JSON.stringify(String(msg)) + " >> /tmp/qs-launcher.log"];
+        p.running = true;
+        p.onExited.connect(function(){ p.destroy(); });
+    }
+
     function search(q) {
         currentQuery = q || "";
         generation++;
@@ -52,6 +59,7 @@ Item {
             return out;
         }
         var res = { calc: dedupe(pending.calc||[]), apps: dedupe(pending.apps||[]), files: dedupe(pending.files||[]) };
+        log("emit q=" + currentQuery + " calc=" + res.calc.length + " apps=" + res.apps.length + " files=" + res.files.length);
         resultsReady(res);
     }
 
@@ -74,13 +82,9 @@ Item {
             id: p
             property string key: ""
             property int gen: 0
-            property string scriptPath: ""
-            stdout: StdioCollector {
-                id: out
-            }
-            stderr: StdioCollector {
-                id: err
-            }
+            property string queryStr: ""
+            stdout: StdioCollector { id: out }
+            stderr: StdioCollector { id: err }
             onExited: function(code) {
                 if (gen === root.generation) {
                     var text = (out.text !== undefined ? out.text : "");
@@ -93,7 +97,7 @@ Item {
     }
 
     function runProvider(key, script, q, gen) {
-        var p = procComp.createObject(root, { key: key, gen: gen, scriptPath: script });
+        var p = procComp.createObject(root, { key: key, gen: gen, queryStr: q });
         p.command = ["python3", script, q];
         p.running = true;
     }
