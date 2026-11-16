@@ -1,0 +1,7 @@
+{
+  "custom/drawer-right": {
+    "format": "󰅀",
+    "tooltip": "Open right drawer",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle right"
+  }
+}

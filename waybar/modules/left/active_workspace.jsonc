@@ -1,0 +1,9 @@
+{
+  "custom/active-workspace": {
+    "format": "{}",
+    "exec": "hyprctl activeworkspace -j 2>/dev/null | jq -r .id",
+    "interval": 1,
+    "tooltip": "Active workspace — click to open workspaces",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle left"
+  }
+}

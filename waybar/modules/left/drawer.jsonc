@@ -1,0 +1,7 @@
+{
+  "custom/drawer-left": {
+    "format": "󰅀",
+    "tooltip": "Open left drawer",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle left"
+  }
+}

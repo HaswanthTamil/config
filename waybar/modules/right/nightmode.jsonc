@@ -1,0 +1,7 @@
+{
+  "custom/nightmode": {
+    "format": "󰖔",
+    "tooltip": "Night Mode (Click to toggle)",
+    "on-click": "hyprsunset 2>/dev/null || true"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "custom/timer": {
+    "format": "󰥔",
+    "tooltip": "System Activity & Clock",
+    "on-click": "$HOME/.config/waybar/panel/zone-panel toggle center"
+  }
+}
