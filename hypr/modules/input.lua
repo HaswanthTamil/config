@@ -20,10 +20,44 @@ hl.config({
     },
 })
 
+-- Workspaces arranged as a 2x5 grid illusion (1-5 top row, 6-10 bottom row).
+-- Left/right: move within the current row (1-5 or 6-10).
+-- Up/down: jump by 5 with wrap (mod 10 in 1..10 space).
+-- Wired to scripts to detect current workspace and switch accordingly.
+local wsLeft  = os.getenv("HOME") .. "/.config/hypr/scripts/ws_grid_left.sh"
+local wsRight = os.getenv("HOME") .. "/.config/hypr/scripts/ws_grid_right.sh"
+local wsUp    = os.getenv("HOME") .. "/.config/hypr/scripts/ws_grid_up.sh"
+
 hl.gesture({
     fingers = 3,
-    direction = "horizontal",
-    action = "workspace"
+    direction = "right",
+    action = function()
+        hl.exec_cmd(wsLeft)
+    end
+})
+
+hl.gesture({
+    fingers = 3,
+    direction = "left",
+    action = function()
+        hl.exec_cmd(wsRight)
+    end
+})
+
+hl.gesture({
+    fingers = 3,
+    direction = "up",
+    action = function()
+        hl.exec_cmd(wsUp)
+    end
+})
+
+hl.gesture({
+    fingers = 3,
+    direction = "down",
+    action = function()
+        hl.exec_cmd(wsUp)
+    end
 })
 
 -- Example per-device config

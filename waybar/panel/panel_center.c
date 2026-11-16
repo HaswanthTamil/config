@@ -20,7 +20,7 @@ static void on_reminder_complete_toggled(GtkToggleButton *btn, gpointer user_dat
 static void on_reminder_delete_clicked(GtkButton *btn, gpointer user_data);
 
 void build_center_zone(void) {
-    GtkWidget *content = create_panel_shell(&g_zone_center, "panel-center", 350, 470, 0);
+    GtkWidget *content = create_panel_shell(&g_zone_center, "panel-center", 420, 470, 0);
 
     // Tab bar matching the bar's inner capsules
     g_zone_center.tab_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);

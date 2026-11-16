@@ -45,7 +45,7 @@ static const char *tile_icon_for_class(const char *cls) {
 }
 
 void build_left_zone(void) {
-    GtkWidget *content = create_panel_shell(&g_zone_left, "panel-left", 420, 440, -1);
+    GtkWidget *content = create_panel_shell(&g_zone_left, "panel-left", 520, 440, -1);
 
     // Tab bar matching the bar's inner capsules
     g_zone_left.tab_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
